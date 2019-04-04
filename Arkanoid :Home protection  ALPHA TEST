@@ -1,0 +1,144 @@
+program abcd;
+
+uses graphABC, ABCobjects, Timers;
+
+var
+  PlayerG, SharG, ObjectG, Object2G, Object3G, Object4G, ZaborG, Zabor2G: PictureABC; PlayerS, SharS, ss, zz: integer;
+
+procedure KeyD(Key: integer);
+begin
+  case key of
+    VK_D:
+    PlayerG.Left := PlayerG.Left + PlayerS;
+    VK_A:
+    PlayerG.Left := PlayerG.Left - PlayerS;
+    VK_Space:
+    SharG.Top := SharG.Top - SharS;
+  end;
+  PlayerG.Move();
+end;
+
+procedure Player(PlayerI: PictureABC; speed: integer);
+begin
+  PlayerI := PictureABC.Create(200, 350, 'Untitled-1.png');
+  PlayerG := PlayerI;
+  PlayerS := speed;
+end;
+
+procedure zabor1(zaborI: PictureABC);
+begin
+  ZaborI := PictureABC.Create(1, 1, 'Untitled-2.png');
+  ZaborG := ZaborI;
+end;
+
+procedure zabor2(zabor2I: PictureABC);
+begin
+  Zabor2I := PictureABC.Create(580, 1, 'Untitled-2.png');
+  Zabor2G := Zabor2I;
+end;
+
+procedure object1(objectI: PictureABC);
+begin
+  ObjectI := PictureABC.Create(150, 10, 'ЗАБОР1.png');
+  ObjectG := ObjectI;
+end;
+
+procedure object4(object4I: PictureABC);
+begin
+  Object4I := PictureABC.Create(25, 10, 'ЗАБОР1.png');
+  Object4G := Object4I;
+end;
+
+procedure object2(object2I: PictureABC);
+begin
+  Object2I := PictureABC.Create(283, 10, 'ЗАБОР1.png');
+  Object2G := Object2I;
+end;
+
+procedure object3(object3I: PictureABC);
+begin
+  Object3I := PictureABC.Create(420, 10, 'ЗАБОР1.png');
+  Object3G := Object3I;
+end;
+
+procedure Shar(SharI: PictureABC; speed: integer);
+begin
+  SharI := PictureABC.Create(270, 350, 'кирпич топ.png');
+  SharG := SharI;
+  SharS := speed;
+end;
+
+procedure SharMove();
+begin;
+  if (PlayerG.Top = SharG.Top) and (PlayerG.Left + 70 = SharG.Left) then
+    ss := 5;
+  if SharG.Intersect(ObjectG) then
+    ss := -5;
+  if SharG.Intersect(ZaborG) then
+  begin
+    if zz = 2 then
+      zz := -2
+    else if zz = -2 then
+      zz := 2;
+    if ss = 5 then
+      ss := 5
+    else if ss = -5 then
+      ss := -5;
+  end;
+  if SharG.Intersect(Zabor2G) then
+  begin
+    if zz = 2 then
+      zz := -2
+    else if zz = -2 then
+      zz := 2;
+    if ss = 5 then
+      ss := 5
+    else if ss = -5 then
+      ss := -5;
+  end;
+  if SharG.Intersect(Object2G) then
+    ss := -5;
+  if SharG.Intersect(Object3G) then
+    ss := -5;
+  if SharG.Intersect(Object4G) then
+    ss := -5;
+  if (PlayerG.Intersect(SharG)) and (PlayerG.Top = SharG.Top) and (PlayerG.Left + 70 < SharG.Left) then
+  begin
+    ss := 5;
+    zz := -2;
+  end;
+  if (PlayerG.Intersect(SharG)) and (PlayerG.Top = SharG.Top) and (PlayerG.Left + 70 > SharG.Left) then
+  begin
+    ss := 5;
+    zz := 2;
+  end;
+  SharG.Top := SharG.Top - ss;
+  SharG.Left := SharG.Left - zz;
+  SharG.Move();
+end;
+
+procedure UpdateScreen(time: integer);
+begin
+  while true do
+  begin
+    SharMove();
+    sleep(time);
+  end;
+end;
+
+
+begin
+  window.clear;
+  window.Fill('font.jpg');
+  setwindowsize(600, 400);
+  Player(PlayerG, 5);
+  Shar(SharG, 5);
+  OnKeyDown := KeyD;
+  Object1(ObjectG);
+  Object2(Object2G);
+  Object3(Object3G);
+  Object4(Object4G);
+  Zabor1(ZaborG);
+  Zabor2(Zabor2G);
+  UpdateScreen(20);
+end.
